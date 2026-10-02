@@ -1,3 +1,5 @@
+from collections import deque
+
 """
 Problem 1: Duplicate Tracker
 
@@ -13,8 +15,22 @@ Output: False
 """
 
 def has_duplicates(product_ids):
-    # Your implementation here
-    pass
+    seen = set()
+
+    for product_id in product_ids:
+        if product_id in seen:
+            return True
+
+        seen.add(product_id)
+
+    return False
+print(has_duplicates([10, 20, 30, 20, 40]))
+print(has_duplicates([1, 2, 3, 4, 5]))
+
+# Design Justification:
+# I chose a set because it allows me to quickly check if a product ID has
+# already been seen. Checking for an item and adding an item to a set are
+# O(1) on average, so checking all product IDs takes O(n) time.
 
 
 """
@@ -32,14 +48,22 @@ task_queue.remove_oldest_task() → "Email follow-up"
 
 class TaskQueue:
     def __init__(self):
-        # Your initialization here
-        pass
+        self.tasks = deque()
 
     def add_task(self, task):
-        pass
+        self.tasks.append(task)
 
     def remove_oldest_task(self):
-        pass
+        if len(self.tasks) == 0:
+            return None
+
+        return self.tasks.popleft()
+
+
+# Design Justification:
+# I chose a queue because tasks need to be removed in the same order they
+# were added, which follows FIFO order. Using deque allows append() and
+# popleft() to both run in O(1) time.
 
 
 """
@@ -57,10 +81,32 @@ tracker.get_unique_count() → 2
 
 class UniqueTracker:
     def __init__(self):
-        pass
+        self.values = set()
 
     def add(self, value):
-        pass
+        self.values.add(value)
 
     def get_unique_count(self):
-        pass
+        return len(self.values)
+
+
+# Design Justification:
+# I chose a set because a set automatically stores only unique values, so
+# duplicate values do not increase the count. Adding a value is O(1) on
+# average, and len() returns the number of unique values in O(1) time.
+
+task_queue = TaskQueue()
+
+task_queue.add_task("Email follow-up")
+task_queue.add_task("Code review")
+
+print(task_queue.remove_oldest_task())
+print(task_queue.remove_oldest_task()) 
+
+tracker = UniqueTracker()
+
+tracker.add(10)
+tracker.add(20)
+tracker.add(10)
+
+print(tracker.get_unique_count())
